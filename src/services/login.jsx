@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://autenticacion-global-dreamlab.azurewebsites.net/api/user/login'
+const baseUrl = 'https://autenticacion-global-dreamlab.azurewebsites.net/api/user/login'
 
 const login = async credentials => {
   const response = await axios.post(baseUrl, credentials);
