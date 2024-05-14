@@ -28,7 +28,7 @@ function App() {
 	const handleLogin = async (event) => {
 		event.preventDefault();
 		const users = await axios.get(
-			"http://autenticacion-global-dreamlab.azurewebsites.net/api/user"
+			"https://autenticacion-global-dreamlab.azurewebsites.net/api/user"
 		);
 		console.log(users);
 
