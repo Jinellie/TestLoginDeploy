@@ -9,6 +9,7 @@ function App() {
 	const [Password, setPassword] = useState("");
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [user, setUser] = useState(null);
+	const [checkbox, setCheckbox] = useState(false);
 
 	const handleLogout = () => {
 		setUser(null);
@@ -33,16 +34,30 @@ function App() {
 		console.log(users);
 
 		try {
-			const user = await loginService.login({
-				Id_Credencial,
-				Password,
-			});
+			if (checkbox == true) {
+				const Source = "lector";
+				const user = await loginService.login({
+					Id_Credencial,
+					Source,
+				});
 
-			window.localStorage.setItem("loggedAppUser", JSON.stringify(user));
+				window.localStorage.setItem("loggedAppUser", JSON.stringify(user));
 
-			setUser(user);
-			setUsername("");
-			setPassword("");
+				setUser(user);
+				setUsername("");
+				setPassword("");
+			} else {
+				const user = await loginService.login({
+					Id_Credencial,
+					Password,
+				});
+
+				window.localStorage.setItem("loggedAppUser", JSON.stringify(user));
+
+				setUser(user);
+				setUsername("");
+				setPassword("");
+			}
 		} catch (exception) {
 			setErrorMessage("Credenciales incorrectas");
 			setUsername("");
@@ -84,21 +99,37 @@ function App() {
 							className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
 						/>
 					</div>
-					<div className="relative mb-4">
-						<label
-							htmlFor="password"
-							className="leading-7 text-sm text-gray-600"
-						>
-							Contraseña
-						</label>
+					{!checkbox && ( // Conditionally render the password field and label
+						<div className="relative mb-4">
+							<label
+								htmlFor="password"
+								className="leading-7 text-sm text-gray-600"
+							>
+								Contraseña
+							</label>
+							<input
+								type="password"
+								value={Password}
+								name="Password"
+								onChange={({ target }) => setPassword(target.value)}
+								className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+							/>
+						</div>
+					)}
+					<div className="flex items-center mb-4">
 						<input
-							type="password"
-							value={Password}
-							name="Password"
-							onChange={({ target }) => setPassword(target.value)}
-							className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+							type="checkbox"
+							id="cbox2"
+							checked={checkbox}
+							onChange={({ target }) => setCheckbox(target.checked)} // Updated to handle boolean value
+							className="mr-2"
 						/>
+						<label htmlFor="cbox2" className="text-sm text-gray-600">
+							{" "}
+							Iniciar sesión con scanner{" "}
+						</label>
 					</div>
+
 					<button
 						type="submit"
 						className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
